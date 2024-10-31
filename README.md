@@ -4,7 +4,7 @@ Secure Medical Records Sharing : A healthcare application that enables the secur
 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-For the **Privacy-Preserving Access** aspect of the SIGHTED system, using NEAR and Calimero, each role can have specific permissions for accessing and interacting with medical data, using access-control policies and privacy-preserving mechanisms. Here’s how each role can be configured:
+For the **Privacy-Preserving Access** aspect of the SIGHTED system, each role can have specific permissions for accessing and interacting with medical data, using access-control policies and privacy-preserving mechanisms. 
 
 ### 1) **Primary Care Provider (PCP)**
 The PCP is typically the main custodian of a patient’s medical records. With privacy-preserving access, the PCP can access the patient’s core medical history but with controls over sensitive details.
