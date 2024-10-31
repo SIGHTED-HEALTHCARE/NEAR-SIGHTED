@@ -1,43 +1,48 @@
 import "./App.css";
-import { BrowserRouter, NavLink } from "react-router-dom"
+import { BrowserRouter, NavLink, Route, Switch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BeatLoader } from "react-spinners";
 import { setupModal } from "@near-wallet-selector/modal-ui";
 import { WalletSelector } from "@near-wallet-selector/core";
 import "@near-wallet-selector/modal-ui/styles.css";
+import LoginScreen from "./LoginScreen";
+import MainScreen from "./MainScreen";
+import Credentials from "../Credentials";
 
-
-
-function App({ currentUser, wallet, selector }: { currentUser: any, wallet: any, selector: WalletSelector }): any {
-  const [user, setUser] = useState(currentUser);
-  const [metadata, setMetadata] = useState<{ name: string, symbol: string, decimals: number } | null>(null);
+/**
+ * React component for the entry point into the application.
+ */
+const App: React.FC = () => {
+  const [credentials, setCredentials] = useState<Credentials | undefined>();
+  const [user, setUser] = useState<string | null>(null);
+  const [metadata, setMetadata] = useState<{ name: string; symbol: string; decimals: number } | null>(null);
   const [loading, setLoading] = useState(false);
+  const selector = ... // Initialize your NEAR wallet selector here
+  const wallet = ... // Initialize your wallet here
 
   useEffect(() => {
     (async () => {
       if (wallet) {
-        setUser(
-          wallet.getAccountId(),
-        );
+        const accountId = await wallet.getAccountId();
+        setUser(accountId);
       }
     })();
-  }, []);
+  }, [wallet]);
 
-  const handleUser = async (e: any) => {
+  const handleUser = async () => {
     if (!user) {
       const modal = setupModal(selector, {
-        contractId: "usdt.tether-token.near"
+        contractId: "usdt.tether-token.near",
       });
-      modal.show()
+      modal.show();
     } else {
       await wallet.signOut();
-      window.location.reload()
+      window.location.reload();
     }
   };
 
   const readMetadata = async () => {
     setLoading(true);
-
     try {
       const tokenMetadata = await wallet.account().viewFunction({
         contractId: "usdt.tether-token.near",
@@ -51,30 +56,37 @@ function App({ currentUser, wallet, selector }: { currentUser: any, wallet: any,
     }
   };
 
-  const stateChangeFunctionCall = async () => {
-    const functionCallRes = await wallet.account().functionCall({
-      contractId: "usdt.tether-token.near",
-      methodName: "ft_transfer",
-      args: { amount: 100, receiver_id: "example.receiver.near" },
-    });
+  const onLogout = () => {
+    setCredentials(undefined);
+    setUser(null);
   };
 
   return (
     <BrowserRouter>
       <div className="navbar-container">
         <div className="nav-links">
-          <NavLink to="/">
-            Home
-          </NavLink>
+          <NavLink to="/">Home</NavLink>
         </div>
         <div className="profile-section">
           <span />
-          {user && <h3>{user?.accountId}</h3>}
+          {user && <h3>{user}</h3>}
           <button className="user-button" onClick={handleUser}>
-            {!!user ? "Sign Out" : "Login"}
+            {user ? "Sign Out" : "Login"}
           </button>
         </div>
       </div>
+      {user ? (
+        <NEARLedger token={credentials?.token} party={credentials?.party}>
+          <Switch>
+            <Route path="/" exact>
+              <MainScreen onLogout={onLogout} />
+            </Route>
+            {/* Add other routes here */}
+          </Switch>
+        </NEARLedger>
+      ) : (
+        <LoginScreen onLogin={setCredentials} />
+      )}
       {user && (
         <div className="container">
           {!metadata && (
@@ -97,6 +109,6 @@ function App({ currentUser, wallet, selector }: { currentUser: any, wallet: any,
       )}
     </BrowserRouter>
   );
-}
+};
 
 export default App;
