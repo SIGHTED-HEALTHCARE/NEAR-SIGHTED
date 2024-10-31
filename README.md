@@ -9,7 +9,7 @@ PROVIDER NODE
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const calimero = require('calimero'); // Hypothetical Calimero library
+const calimero = require('calimero'); 
 
 const app = express();
 app.use(bodyParser.json());
@@ -60,7 +60,7 @@ PATIENT NODE
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const calimero = require('calimero'); // Hypothetical Calimero library
+const calimero = require('calimero'); 
 
 const app = express();
 app.use(bodyParser.json());
