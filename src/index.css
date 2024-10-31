@@ -11,3 +11,20 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+
+
+
+.Landing {
+  padding-top: 126px;
+}
+
+.Landing > * {
+  margin-bottom: 40px;
+}
+
+.landing-header {
+  line-height: 1.16;
+}
+.landing-description {
+  line-height: 1.19;
+}
