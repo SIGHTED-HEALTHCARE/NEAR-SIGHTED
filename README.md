@@ -2,6 +2,91 @@
 
 Secure Medical Records Sharing : A healthcare application that enables the secure and private sharing of medical records between patients and healthcare providers, using Calimero for privacy-preserving access.
 
+======================================================================================================================================================================================================================================================================================
+
+For the **Privacy-Preserving Access** aspect of the SIGHTED system, using NEAR and Calimero, each role can have specific permissions for accessing and interacting with medical data, using access-control policies and privacy-preserving mechanisms. Here’s how each role can be configured:
+
+### 1) **Primary Care Provider (PCP)**
+The PCP is typically the main custodian of a patient’s medical records. With privacy-preserving access, the PCP can access the patient’s core medical history but with controls over sensitive details.
+
+#### Privacy-Preserving Access Configuration:
+- **Role-Based Permissions**: The PCP can view and update certain sections of a patient’s record but may have limited access to highly sensitive data.
+- **Encrypted Data Access**: Only the PCP has decryption keys for their assigned records, ensuring patient data remains secure when accessed.
+
+```typescript
+// Sample data access example for PCP
+const grantPCPAccess = async (pcpId: string, patientId: string) => {
+  await calimero.shard.assignRole(pcpId, {
+    role: 'PRIMARY_CARE_PROVIDER',
+    permissions: ['READ_PATIENT_RECORD', 'WRITE_MEDICAL_NOTES'],
+  });
+};
+```
+
+### 2) **Radiologist**
+The radiologist has access to imaging data and specific test results but is restricted from viewing broader patient records unless required for treatment.
+
+#### Privacy-Preserving Access Configuration:
+- **Selective Access**: The radiologist can only access the imaging records and associated notes, minimizing unnecessary exposure to other patient information.
+- **Temporal Access Control**: Access is limited to a specific period or task to prevent persistent access to patient data.
+
+```typescript
+// Grant access to imaging records for radiologist
+const grantRadiologistAccess = async (radiologistId: string, imagingRecordId: string) => {
+  await calimero.shard.assignRole(radiologistId, {
+    role: 'RADIOLOGIST',
+    permissions: ['READ_IMAGING_RECORD'],
+    resourceId: imagingRecordId,
+  });
+};
+```
+
+### 3) **Insurance Company**
+The insurance company can access claim-related data to verify and process claims but cannot view detailed patient records.
+
+#### Privacy-Preserving Access Configuration:
+- **Policy-Based Access Control**: Permissions are restricted to claim verification and billing details, not the patient’s complete medical history.
+- **Zero-Knowledge Proofs**: Data required for claims can be validated without disclosing underlying sensitive details, using cryptographic proofs.
+
+```typescript
+// Grant limited access for insurance claim verification
+const grantInsuranceAccess = async (insuranceId: string, claimId: string) => {
+  await calimero.shard.assignRole(insuranceId, {
+    role: 'INSURANCE_COMPANY',
+    permissions: ['VIEW_CLAIM'],
+    resourceId: claimId,
+  });
+};
+```
+
+### 4) **Patient**
+The patient has full access to their medical records and can approve or revoke access to their data as needed, offering them control over their privacy.
+
+#### Privacy-Preserving Access Configuration:
+- **Self-Sovereign Control**: Patients have the ability to provide selective access to their data and can revoke permissions at any time.
+- **End-to-End Encryption**: Patients’ records are encrypted, and they can use their private key to share or hide parts of their data selectively.
+
+```typescript
+// Patient granting access to a specific provider
+const patientGrantAccess = async (patientId: string, providerId: string) => {
+  await calimero.shard.grantAccess(patientId, providerId, {
+    permissions: ['READ_MEDICAL_RECORD'],
+  });
+};
+```
+
+Using **Calimero's privacy-preserving capabilities** with **NEAR's secure smart contracts**, each role can have fine-grained, controlled access to patient records, ensuring data privacy while enabling necessary medical workflows. This setup allows SIGHTED to securely manage data sharing and maintain patient autonomy over personal information.
+
+
+
+
+======================================================================================================================================================================================================================================================================================
+
+
+
+
+
+
 PROVIDER NODE
 
 ```
@@ -106,6 +191,8 @@ app.listen(PORT, () => {
 });
 
 ```
+
+======================================================================================================================================================================================================================================================================================
 
 
 ### 1. **Bridging Fungible Tokens (bridging-fts)**
