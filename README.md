@@ -2,6 +2,7 @@
 
 Secure Medical Records Sharing : A healthcare application that enables the secure and private sharing of medical records between patients and healthcare providers, using Calimero for privacy-preserving access.
 
+![](https://github.com/SIGHTED-HEALTHCARE/NEAR-SIGHTED/blob/main/images/Screen%20Shot%202024-11-01%20at%2012.03.59%20AM.png?raw=true)
 
 ### “When life’s most private moments need to stay private, SIGHTED ensures no one’s looking in.”
 
