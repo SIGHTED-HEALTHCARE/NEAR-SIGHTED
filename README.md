@@ -6,7 +6,7 @@ Secure Medical Records Sharing : A healthcare application that enables the secur
 
 ### “When life’s most private moments need to stay private, SIGHTED ensures no one’s looking in.”
 
-![](https://github.com/SIGHTED-HEALTHCARE/NEAR-SIGHTED/blob/main/images/Screen%20Shot%202024-11-01%20at%2012.02.07%20AM.png?raw=true)
+![](https://github.com/SIGHTED-HEALTHCARE/NEAR-SIGHTED/blob/main/images/Screen%20Shot%202024-11-01%20at%2012.10.17%20AM.png?raw=true)
 
 ![](https://github.com/SIGHTED-HEALTHCARE/NEAR-SIGHTED/blob/main/images/Screen%20Shot%202024-10-31%20at%2011.44.04%20PM.png?raw=true)
 
