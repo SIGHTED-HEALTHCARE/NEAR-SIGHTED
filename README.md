@@ -83,6 +83,85 @@ Using **Calimero's privacy-preserving capabilities** with **NEAR's secure smart 
 ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
+### 1) **Permissioned Private Shard Owned by a Single Entity**
+This mode allows for the most controlled environment where a single entity, such as a hospital or healthcare network, owns the shard. Access control is strict, and permissions are finely managed for each role.
+
+- **Primary Care Provider (PCP)** and **Radiologist**: As internal users in this single-entity shard, they receive access to patient data per the organization’s policies. Data sharing is limited to users within the entity, preventing external access.
+- **Insurance Company**: The insurance company can access patient claims only by secure APIs with strict, contract-based access (e.g., Zero-Knowledge Proofs) that reveal minimal information for claim verification.
+- **Patient**: The patient can view their records and selectively grant or revoke access to specific doctors or departments within the hospital. They retain control over their data with access logs provided by the entity.
+
+**Single-Entity Shard Permissions**:
+
+```typescript
+// Single-entity controlled access for internal users
+const setupSingleEntityShard = async () => {
+  await calimero.shard.create({
+    owner: "HospitalSystem",
+    mode: "PermissionedPrivateSingleEntity",
+  });
+
+  // Grant PCP access within the hospital
+  await calimero.shard.assignRole("pcpId", {
+    permissions: ['READ_PATIENT_RECORD', 'WRITE_MEDICAL_NOTES'],
+    resourceId: "patientRecord",
+  });
+};
+```
+
+### 2) **Permissioned Private Shard Owned by a Consortium**
+Here, a consortium of healthcare providers and insurance companies jointly owns the shard. This mode allows for cross-institutional data access and sharing under strict policies, where each entity can manage role-based access across multiple parties while maintaining patient data privacy.
+
+- **Primary Care Provider (PCP)** and **Radiologist**: PCPs and radiologists from any entity within the consortium can access patient records per their role permissions. For example, a PCP from one hospital can access imaging data from a radiologist at another consortium hospital, providing coordinated care across facilities.
+- **Insurance Company**: Insurance companies in the consortium have permission to access claims data only, without access to broader medical histories. Zero-Knowledge Proofs are used for privacy-preserving verification across entities.
+- **Patient**: Patients can authorize specific providers across the consortium to view or update their records. They benefit from seamless care coordination without losing control over who accesses their information.
+
+**Consortium Shard Permissions**:
+
+```typescript
+// Multi-entity controlled access for a consortium
+const setupConsortiumShard = async () => {
+  await calimero.shard.create({
+    owner: ["HospitalSystem1", "HospitalSystem2", "InsuranceCompany1"],
+    mode: "PermissionedPrivateConsortium",
+  });
+
+  // Grant cross-entity access with selective permissions
+  await calimero.shard.assignRole("radiologistId", {
+    permissions: ['READ_IMAGING_RECORD'],
+    resourceId: "imagingRecord",
+  });
+};
+```
+
+### 3) **Public Shard Owned by a Community**
+In this mode, SIGHTED operates in a more open environment where patients and providers form a decentralized community, using smart contracts for permissions. Here, transparency is high, yet patient data remains private through encryption and selective access.
+
+- **Primary Care Provider (PCP)** and **Radiologist**: Providers can access patient data only with explicit patient approval. Any access request is transparent, allowing patients to manage permissions independently in a community-driven environment.
+- **Insurance Company**: Insurance companies, as members of the public shard, can process claims, but data access is limited to required information only. Claims verification relies heavily on Zero-Knowledge Proofs for community compliance and transparency.
+- **Patient**: Patients are the true owners of their data, with full autonomy to grant or deny access to any provider or insurance company. This setup maximizes control, transparency, and privacy, as data cannot be accessed without explicit consent.
+
+**Community-Owned Public Shard Permissions**:
+
+```typescript
+// Decentralized control and transparency in a community shard
+const setupCommunityShard = async () => {
+  await calimero.shard.create({
+    owner: "Community",
+    mode: "PublicCommunity",
+  });
+
+  // Patient controls access with individual permissions
+  const patientGrantAccess = async (patientId: string, providerId: string) => {
+    await calimero.shard.grantAccess(patientId, providerId, {
+      permissions: ['READ_MEDICAL_RECORD'],
+      expiration: '2024-12-31T23:59:59Z', // Optional time-bound access
+    });
+  };
+};
+```
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
